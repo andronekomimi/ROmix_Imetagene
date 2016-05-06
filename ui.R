@@ -75,10 +75,19 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                                                        shinyBS::bsCollapsePanel("Load existing metagene object", 
                                                                                                 list(
                                                                                                   helpText("Load a metagene object produced during a previous session."),
-                                                                                                  shinyFiles::shinyFilesButton('loadMetagene', 'Choose file',
-                                                                                                                               'Please select a file', FALSE),
                                                                                                   shiny::actionLink(inputId = "hloadMetagene", label = "", icon = icon("question-circle")),
-                                                                                                  textInput(inputId = "path_load_metagene", label = "", width = "100%"),
+                                                                                                  fileInput('path_load_metagene', 'Choose file to upload',
+                                                                                                            width = '60%',
+                                                                                                            accept = c(
+                                                                                                              '.Rda', 
+                                                                                                              '.RData', 
+                                                                                                              '.RDA', 
+                                                                                                              '.RDATA'
+                                                                                                            )
+                                                                                                  ),
+                                                                                                  # shinyFiles::shinyFilesButton('loadMetagene', 'Choose file',
+                                                                                                  #                              'Please select a file', FALSE),
+                                                                                                  # textInput(inputId = "path_load_metagene", label = "", width = "100%"),
                                                                                                   shinyBS::bsAlert("load_alert")
                                                                                                 ), 
                                                                                                 style = "primary"),
@@ -86,30 +95,54 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                                                                                 list(
                                                                                                   helpText("Create a metagene object from scratch with BAM and BED files."),
                                                                                                   fluidRow(
-                                                                                                    column(width = 6,
+                                                                                                    column(width = 4,
                                                                                                            list(
-                                                                                                             shinyFiles::shinyFilesButton('bams', 'Select BAM files', 
-                                                                                                                                          'Please select a file', TRUE),
                                                                                                              shiny::actionLink(inputId = "hbams", label = "", icon = icon("question-circle")),
                                                                                                              br(),
+                                                                                                             br(),
+                                                                                                             fileInput('file1', 'Select BAM files',
+                                                                                                                       width = '100%',
+                                                                                                                       multiple = TRUE,
+                                                                                                                       accept = c('.bam')
+                                                                                                             ),
                                                                                                              uiOutput("bam_list")
                                                                                                            )
                                                                                                     ),
-                                                                                                    column(width = 6,
+                                                                                                    column(width = 4,
                                                                                                            list(
-                                                                                                             shinyFiles::shinyFilesButton('beds', 'Select BED files', 
-                                                                                                                                          'Please select a file', TRUE),
+                                                                                                             shiny::actionLink(inputId = "hbams", label = "", icon = icon("question-circle")),
+                                                                                                             br(),
+                                                                                                             br(),
+                                                                                                             fileInput('file2', 'Select corresponding BAI files',
+                                                                                                                       width = '100%',
+                                                                                                                       multiple = TRUE,
+                                                                                                                       accept = c('.bai')
+                                                                                                             ),
+                                                                                                             uiOutput("bai_list")
+                                                                                                           )
+                                                                                                    ),
+                                                                                                    column(width = 4,
+                                                                                                           list(
                                                                                                              shiny::actionLink(inputId = "hbeds", label = "", icon = icon("question-circle")),
                                                                                                              br(),
+                                                                                                             br(),
+                                                                                                             fileInput('file3', 'Select BED files',
+                                                                                                                       width = '100%',
+                                                                                                                       multiple = TRUE,
+                                                                                                                       accept = c('.bed', 
+                                                                                                                                  '.BED', 
+                                                                                                                                  '.narrowPeak', 
+                                                                                                                                  '.broadPeak')
+                                                                                                             ),
                                                                                                              uiOutput("bed_list")
                                                                                                            )
                                                                                                     )
                                                                                                   ),
                                                                                                   br(),hr(),br(),
                                                                                                   fluidRow(
-                                                                                                    column(width = 3,
+                                                                                                    column(width = 6,
                                                                                                            shinyBS::bsButton(inputId = "runMetagene", label = "Run metagene", style = "btn btn-primary", disabled = FALSE)),
-                                                                                                    column(width = 8,
+                                                                                                    column(width = 6,
                                                                                                            downloadButton(outputId = "saveMetagene", label = "Save metagene", class = "btn btn-primary"))
                                                                                                   ),
                                                                                                   br(),
@@ -141,10 +174,17 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                                                                                                   fluidRow(
                                                                                                     column(width = 8,
                                                                                                            list(
-                                                                                                             shinyFiles::shinyFilesButton('loadDesign', 'Choose file', 
-                                                                                                                                          'Please select a file', FALSE),
                                                                                                              shiny::actionLink(inputId = "hloadDesign", label = "", icon = icon("question-circle")),
-                                                                                                             textInput(inputId = "path_load_design", label = "", width = "100%")
+                                                                                                             br(),
+                                                                                                             br(),
+                                                                                                             fileInput('file4', 'Select design files',
+                                                                                                                       width = '100%',
+                                                                                                                       multiple = TRUE,
+                                                                                                                       accept = c('',
+                                                                                                                                  '.txt',
+                                                                                                                                  '.csv',
+                                                                                                                                  '.tsv')
+                                                                                                             )
                                                                                                            )
                                                                                                     ),
                                                                                                     column(width = 3,
