@@ -4,3 +4,4 @@ shinyBS
 shinyFiles
 shinythemes
 ggplot2
+
