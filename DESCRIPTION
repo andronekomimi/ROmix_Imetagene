@@ -1,0 +1,20 @@
+Package: imetagene
+Title: imetagene
+Version: 0.1
+Authors@R: person("Audrey", "Lemacon", email = "audrey.lemacon@ulaval.ca.1",
+                  role = c("aut", "cre"))
+Description: imetagene
+Depends: R (>= 3.1.0)
+License: Proprietary
+LazyData: true
+Imports: 
+  devtools,
+  shiny,
+  d3heatmap,
+  shinyBS,
+  shinyFiles,
+  shinythemes,
+  ggplot2,
+  metagene
+DevPackage:
+  CharlesJB/metagene
