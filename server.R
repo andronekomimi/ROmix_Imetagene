@@ -462,7 +462,7 @@ shinyServer(function(input, output, session) {
       return(NULL)
     
     tryCatch ({
-      design <<- read.table(file = as.character(pfile$datapath), header = input$header, stringsAsFactors = FALSE)
+      design <<- read.table(file = as.character(pfile$datapath), header = input$header, stringsAsFactors = FALSE, sep = "\t")
       #         print(names(metagene_object$get_raw_coverages()))
       metagene_object$add_design(design, check_bam_file = TRUE)
       
@@ -600,10 +600,10 @@ shinyServer(function(input, output, session) {
   ### SAVE DESIGN
   output$saveDesign <- shiny::downloadHandler(
     filename = function() {
-      paste("metagene_design_",format(Sys.time(), "%m_%d_%y_%H_%M_%S"),'.csv', sep='')
+      paste("metagene_design_",format(Sys.time(), "%m_%d_%y_%H_%M_%S"),'.tsv', sep='')
     },
     content = function(file) {
-      write.csv(metagene_object$get_design(), file, row.names=FALSE, quote=FALSE )
+      write.table(metagene_object$get_design(), file, row.names=FALSE, quote=FALSE, sep = "\t")
     }
   )
   
@@ -752,7 +752,7 @@ shinyServer(function(input, output, session) {
         shinyBS::updateButton(session,inputId = "runMatrix", "Producing matrix...", disabled = TRUE)
         
         metagene_object$produce_matrices(design = used_design,
-                                         bin_size = input$bin_size, 
+                                         bin_count = input$bin_count, 
                                          noise_removal = noise,
                                          normalization = norm, 
                                          flip_regions = input$flip)
@@ -832,9 +832,7 @@ shinyServer(function(input, output, session) {
   
   shiny::observeEvent(input$runPlot, {
     if(!is.null(metagene_object) && !is.null(metagene_object$get_matrices()))  {
-      
-      
-      
+
       if(! input$use_design){
         used_design <- NA
       } else {
@@ -845,46 +843,19 @@ shinyServer(function(input, output, session) {
       
       metagene_object$produce_data_frame(alpha = input$alpha, sample_count = input$sample_count)
       
-      metagene_object$plot(region_names = input$plot_regions, exp_names = input$plot_exps, range = c(-1,1), title = input$plot_title)
-      
-      #       metagene_plot <- metagene_object$plot(design = used_design, regions_group = input$plot_regions,
-      #                                      bin_size = input$bin_size, alpha = input$alpha, sample_count = input$sample_count,
-      #                                      range = c(-1,1), title = input$plot_title, flip_regions = input$flip)
-      
-      pdf(tempfiles[1], onefile=T, paper="USr")
-      print(metagene_object$get_plot())
-      dev.off()
-      
-      png(tempfiles[2])
-      print(metagene_object$get_plot())
-      dev.off()
+      metagene_object$plot(region_names = input$plot_regions, exp_names = input$plot_exps, title = input$plot_title)
       
       shinyBS::updateButton(session,inputId = "runPlot", "Plotting", disabled = FALSE)
       
-      output$mg_plot <- renderPlot({
-        metagene_object$get_plot()
+      output$mg_plot <- renderPlotly({
+        p <- metagene_object$get_plot()
+        p <- p + theme(text = element_text(size=10),
+                       axis.text.x = element_text(size=10))
+        p
       })
+      
     }
   })
-  
-  
-  output$savePlotPDF <- shiny::downloadHandler(
-    filename = function() {
-      "metagene_plot.pdf"
-    },
-    content = function(file) {
-      file.copy(tempfiles[1], file, overwrite = TRUE)
-    }
-  )
-  
-  output$savePlotPNG <- shiny::downloadHandler(
-    filename = function() {
-      "metagene_plot.png"
-    },
-    content = function(file) {
-      file.copy(tempfiles[2], file, overwrite = TRUE)
-    }
-  )
   
   shinyBS::addPopover(session, id = "hloadMetagene", title = "", content =
                         "File must be a RData file (.RData, .Rda, .RDATA, .RDA) produced by Imetagene or metagene..")
@@ -899,8 +870,8 @@ shinyServer(function(input, output, session) {
                         "A design file is a tab-delimited file (.tsv) that describes one or more experiments. An experiment can contain one or more replicates and controls.
                                                                        The first column of a design file contains the list of bam names available in the current metagene object.
                                                                        The following columns correspond to the experiments. They must have a unique name and the possible values are 0 (ignore), 1 (chip) or 2 (control).")
-  shinyBS::addPopover(session, id = "hbin_size", title = "", content =
-                        "The size of each bin, in nucleotides")
+  shinyBS::addPopover(session, id = "hbin_count", title = "", content =
+                        "The number of bins")
   shinyBS::addPopover(session, id = "hnoise", title = "", content =
                         "Algorithm use to remove background. Requires a design file.")
   shinyBS::addPopover(session, id = "hnorm", title = "", content =

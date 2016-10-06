@@ -1,8 +1,8 @@
 # IMETAGENE UI.R
 library(shiny)
 library(shinyBS)
-library(shinyFiles)
 library(shinythemes)
+library(plotly)
 
 footer<-function(){
   tags$div(
@@ -15,11 +15,11 @@ footer<-function(){
                tags$a(href="http://bioinformatique.genome.ulaval.ca/recherche/","Arnaud Droit Lab"),
                " project (2015).",
                br(),
-               "Development of metagene library : ",
-               tags$a(href="https://ca.linkedin.com/pub/charles-joly-beauparlant/89/491/3b3", "Charles Joly-Beauparlant "),
-               br(),
                "Development of Imetagene web interface ",
-               tags$a(href="https://ca.linkedin.com/in/audreylemacon", "Audrey Lemacon ")
+               tags$a(href="https://ca.linkedin.com/in/audreylemacon", "Audrey Lemacon "),
+               br(),
+               "Development of metagene library : ",
+               tags$a(href="https://ca.linkedin.com/pub/charles-joly-beauparlant/89/491/3b3", "Charles Joly-Beauparlant ")
              )
              
     )
@@ -177,12 +177,11 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
              shiny::actionLink(inputId = "hloadDesign", label = "", icon = icon("question-circle")),
              br(),
              br(),
-             fileInput('file4', 'Select design files',
+             fileInput('file4', 'Select design file',
                        width = '100%',
                        multiple = TRUE,
                        accept = c('',
                   '.txt',
-                  '.csv',
                   '.tsv')
              )
                            )
@@ -255,9 +254,9 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                 list(
                   fluidRow(
                     column(width = 3,
-                           numericInput(inputId = "bin_size", value = 100, label = "bin size")),
+                           numericInput(inputId = "bin_count", value = 1, label = "bin count")),
                     column(width = 8,
-                           shiny::actionLink(inputId = "hbin_size", label = "", icon = icon("question-circle")))
+                           shiny::actionLink(inputId = "hbin_count", label = "", icon = icon("question-circle")))
                   ),
                   fluidRow(
                     column(width = 3,
@@ -338,19 +337,13 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                       ),
                       column(width = 8,
              list(
-               plotOutput(outputId = "mg_plot")
+               plotlyOutput(outputId = "mg_plot")
              )
                       )
                     ),
                     br(),
                     shinyBS::bsButton(inputId = "runPlot", label = "Plot", style = "btn btn-primary", disabled = FALSE),
-                    br(),br(),
-                    fluidRow(
-                      column(width = 6,
-             downloadButton(outputId = "savePlotPNG", label = "Export PNG")),
-                      column(width = 6,
-             downloadButton(outputId = "savePlotPDF", label = "Export PDF"))
-                    )
+                    br()
                   )
                   ,style = "primary"
          )
