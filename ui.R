@@ -93,7 +93,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                 style = "primary"),
                        shinyBS::bsCollapsePanel("Create a new metagene object", 
                 list(
-                  helpText("Create a metagene object from scratch with BAM and BED files."),
+                  helpText("Create a metagene object from scratch with indexed BAM and BED files."),
                   fluidRow(
                     column(width = 4,
                            list(
@@ -110,7 +110,7 @@ shinyUI(fluidPage(theme = shinythemes::shinytheme("flatly"),
                     ),
                     column(width = 4,
                            list(
-             shiny::actionLink(inputId = "hbams", label = "", icon = icon("question-circle")),
+             shiny::actionLink(inputId = "hbais", label = "", icon = icon("question-circle")),
              br(),
              br(),
              fileInput('file2', 'Select corresponding BAI files',
