@@ -3,6 +3,5 @@ d3heatmap
 shinyBS
 shinyFiles
 shinythemes
-ggplot2
 plotly
 
